@@ -69,7 +69,6 @@ public class CompanyService {
         );
     }
 
-    // Método auxiliar para normalizar os campos
     private String normalize(String value) {
 
         if (value == null || value.isBlank()) {
