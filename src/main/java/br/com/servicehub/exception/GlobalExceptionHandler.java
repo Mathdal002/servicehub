@@ -19,14 +19,9 @@ public class GlobalExceptionHandler {
 	}
 	
 	@ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ApiError> handleIllegalArgument(
-            IllegalArgumentException exception) {
+    public ResponseEntity<ApiError> handleIllegalArgument(IllegalArgumentException exception) {
 
-        ApiError error = new ApiError(
-            HttpStatus.BAD_REQUEST.value(),
-            "Bad Request",
-            exception.getMessage()
-        );
+        ApiError error = new ApiError(HttpStatus.BAD_REQUEST.value(), "Bad Request", exception.getMessage());
 
         return ResponseEntity.badRequest().body(error);
     }
@@ -34,18 +29,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiError> handleValidation(MethodArgumentNotValidException exception) {
 
-        String message = exception.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .findFirst()
-                .map(fieldError -> fieldError.getDefaultMessage())
-                .orElse("Dados inválidos.");
+        String message = exception.getBindingResult().getFieldErrors().stream().findFirst().map(fieldError -> fieldError.getDefaultMessage()).orElse("Dados inválidos.");
 
-        ApiError error = new ApiError(
-            HttpStatus.BAD_REQUEST.value(),
-            "Bad Request",
-            message
-        );
+        ApiError error = new ApiError(HttpStatus.BAD_REQUEST.value(), "Bad Request", message);
 
         return ResponseEntity.badRequest().body(error);
     }
