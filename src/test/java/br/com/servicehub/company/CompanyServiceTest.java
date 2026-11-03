@@ -28,12 +28,7 @@ class CompanyServiceTest {
     @Test
     void deveCadastrarEmpresaComSucesso() {
 
-        CompanyRequest request = new CompanyRequest(
-            "Empresa Teste",
-            null,
-            "contato@empresa.com",
-            "62999999999"
-        );
+        CompanyRequest request = new CompanyRequest("Empresa Teste", null, "contato@empresa.com", "62999999999");
 
         when(companyRepository.save(any(Company.class)))
             .thenAnswer(invocation -> {
@@ -67,25 +62,13 @@ class CompanyServiceTest {
     @Test
     void naoDeveCadastrarEmpresaComDocumentoDuplicado() {
 
-        CompanyRequest request = new CompanyRequest(
-            "Empresa Teste",
-            "12345678000199",
-            "contato@empresa.com",
-            "62999999999"
-        );
+        CompanyRequest request = new CompanyRequest("Empresa Teste", "12345678000199", "contato@empresa.com", "62999999999");
 
-        when(companyRepository.existsByDocument("12345678000199"))
-            .thenReturn(true);
+        when(companyRepository.existsByDocument("12345678000199")).thenReturn(true);
 
-        IllegalArgumentException exception = assertThrows(
-            IllegalArgumentException.class,
-            () -> companyService.create(request)
-        );
+        DuplicateCompanyDocumentException exception = assertThrows(DuplicateCompanyDocumentException.class, () -> companyService.create(request));
 
-        assertEquals(
-            "Já existe uma empresa cadastrada com este documento.",
-            exception.getMessage()
-        );
+        assertEquals("Já existe uma empresa cadastrada com este documento.", exception.getMessage());
 
         verify(companyRepository, never()).save(any(Company.class));
     }

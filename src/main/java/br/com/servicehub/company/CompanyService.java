@@ -21,9 +21,7 @@ public class CompanyService {
     public CompanyResponse create(CompanyRequest request) {
 
         if (request == null) {
-            throw new IllegalArgumentException(
-                "Os dados da empresa são obrigatórios."
-            );
+            throw new IllegalArgumentException("Os dados da empresa são obrigatórios.");
         }
 
         String name = request.name() == null
@@ -31,9 +29,7 @@ public class CompanyService {
                 : request.name().trim();
 
         if (name.isBlank()) {
-            throw new IllegalArgumentException(
-                "O nome da empresa é obrigatório."
-            );
+            throw new IllegalArgumentException("O nome da empresa é obrigatório.");
         }
 
         String document = normalize(request.document());
@@ -43,9 +39,7 @@ public class CompanyService {
         if (document != null &&
                 companyRepository.existsByDocument(document)) {
 
-            throw new IllegalArgumentException(
-                "Já existe uma empresa cadastrada com este documento."
-            );
+            throw new DuplicateCompanyDocumentException("Já existe uma empresa cadastrada com este documento.");
         }
 
         Company company = new Company();
