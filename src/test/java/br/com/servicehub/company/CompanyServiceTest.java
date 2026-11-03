@@ -54,4 +54,39 @@ class CompanyServiceTest {
 
         verify(companyRepository, times(1)).save(any(Company.class));
     }
+    
+    @Test
+    void naoDeveCadastrarEmpresaSemNone() {
+    	CompanyRequest request = new CompanyRequest("", null, "contato@empresa.com", "62999999999");
+    	IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> companyService.create(request));
+    	
+    	assertEquals("O nome da empresa é obrigatório.", exception.getMessage());
+    	verify(companyRepository, never()).save(any(Company.class));
+    }
+    
+    @Test
+    void naoDeveCadastrarEmpresaComDocumentoDuplicado() {
+
+        CompanyRequest request = new CompanyRequest(
+            "Empresa Teste",
+            "12345678000199",
+            "contato@empresa.com",
+            "62999999999"
+        );
+
+        when(companyRepository.existsByDocument("12345678000199"))
+            .thenReturn(true);
+
+        IllegalArgumentException exception = assertThrows(
+            IllegalArgumentException.class,
+            () -> companyService.create(request)
+        );
+
+        assertEquals(
+            "Já existe uma empresa cadastrada com este documento.",
+            exception.getMessage()
+        );
+
+        verify(companyRepository, never()).save(any(Company.class));
+    }
 }
