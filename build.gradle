@@ -36,6 +36,10 @@ dependencies {
 }
 
 tasks.named('bootRun') {
-	systemProperty 'java.io.tmpdir',
+    systemProperty 'java.io.tmpdir',
         file('.runtime-temp').absolutePath
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
 }
